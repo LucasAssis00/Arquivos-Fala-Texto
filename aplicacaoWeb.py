@@ -218,7 +218,9 @@ speak("""Olá. Eu sou o assistente de voz. Fale o termo navegador para abri-lo,
       cite o nome do campo antes de pronunciar a informação
        ou depois da palavra  limpar para apagar algo já preenchido""")
 '''
+html_file_path = os.path.abspath("webinicial.html")
 driver = webdriver.Edge()
+driver.get(f"file://{html_file_path}")
 while True:
     command = listen().upper()  # string
     if "INTERROMPER GRAVAÇÃO" in command:
@@ -256,14 +258,17 @@ while True:
             #speak("nova janela")
             driver.switch_to.new_window('window')
             janelas_ativas = driver.window_handles
+        '''
         if "GOOGLE" in command:
             speak("google")
             driver.get("http://www.google.com")
         if "YOUTUBE" in command:
             driver.get("https://www.youtube.com")
             janelas_ativas = driver.window_handles
+        '''
         if "FORMULÁRIO 1" in command:
             speak("abrindo Demonstração Preenchimento Web")
+            driver.switch_to.new_window('tab')
             #driver = webdriver.Edge()
             time.sleep(1)
             driver.get("http://docs.google.com/forms/d/1UZkASiSkVhUnS-ppKGi7mStAF14UAw5zL_YIvHMzIjM")
@@ -329,6 +334,7 @@ while True:
             #print(janelas_ativas)
             driver.quit()
             #speak("Fechando o navegador")
+        '''
         if "PESQUISAR" in command:
             texto_pesquisa = (command.split("PESQUISAR", 1)[1])
             #speak("Pesquisando" + texto_pesquisa)
@@ -343,6 +349,7 @@ while True:
             search_box.send_keys(texto_pesquisa)
             search_box.send_keys(Keys.RETURN)
             #search_box.send_keys(Keys.ENTER)
+        '''
         if "ENCERRAR" in command:
             try:
                 driver.quit()
