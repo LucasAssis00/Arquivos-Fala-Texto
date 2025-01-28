@@ -273,6 +273,12 @@ while True:
             time.sleep(1)
             driver.get("http://docs.google.com/forms/d/1UZkASiSkVhUnS-ppKGi7mStAF14UAw5zL_YIvHMzIjM")
             janelas_ativas = driver.window_handles
+        if "FORMULÁRIO 2" in command:
+            speak("abrindo practice-automation")
+            driver.switch_to.new_window('tab')
+            time.sleep(1)
+            driver.get("https://practice-automation.com/form-fields/")
+            janelas_ativas = driver.window_handles
         if "NOME" in command:
             search_box = driver.find_element("xpath", '/html/body/div/div[3]/form/div[2]/div/div[2]/div[1]/div/div/div[2]/div/div[1]/div/div[1]/input')
             #cor_desejada = "#FFD700"  # Amarelo
@@ -320,6 +326,8 @@ while True:
 
             botao_avanca.click()
             speak("As informações foram registradas.")
+            time.sleep(1)
+            #driver.close()
             '''
             try:
                 alert = Alert(driver)
@@ -329,7 +337,7 @@ while True:
                 print("No alert found.")
             #time.sleep(0.5)
             '''
-            driver.execute_script("window.scrollTo(0, 0);")
+            #driver.execute_script("window.scrollTo(0, 0);")
         if "SAIR" in command:
             #print(janelas_ativas)
             driver.quit()
