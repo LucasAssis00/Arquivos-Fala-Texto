@@ -14,6 +14,7 @@ from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import UnexpectedAlertPresentException, NoAlertPresentException
 
 # variaveis globais
 model = whisper.load_model("medium")
@@ -83,7 +84,7 @@ def reconhecer_comando():
     global amplitude
     global sinal
     fs = 44100  # Taxa de amostragem
-    seconds = 6 # Duração da gravação
+    seconds = 7 # Duração da gravação
             
     d = time.time()
     print("Diga algo:")
@@ -138,7 +139,7 @@ def habilitar_calibra():
     global amplitude
     global sinal
     fs = 44100  # Taxa de amostragem
-    seconds = 6  # Duração da gravação
+    seconds = 7  # Duração da gravação
     print('Fale: calibrando o microfone')
     recording2 = sd.rec(int(seconds * fs), samplerate=fs, channels=canal)
     sd.wait()
@@ -241,7 +242,7 @@ while True:
             time.sleep(1)
             driver.get("https://docs.google.com/forms/d/e/1FAIpQLSc1JetQtx0i1VsrSdUNAl_wo319_bnxZOW7nJxMNWM49rryjw/viewform")
             janelas_ativas = driver.window_handles
-        """
+
         if "https://docs.google.com/forms/d/1UZkASiSkVhUnS-ppKGi7mStAF14UAw5zL_YIvHMzIjM/viewform?edit_requested=true" in driver.current_url:
             if "NOME" in command:
                 search_box = driver.find_element("xpath", '/html/body/div/div[3]/form/div[2]/div/div[2]/div[1]/div/div/div[2]/div/div[1]/div/div[1]/input')
@@ -300,7 +301,7 @@ while True:
                 #time.sleep(0.5)
                 '''
                 driver.execute_script("window.scrollTo(0, 0);")
-        """
+
         if "https://practice-automation.com/form-fields/" in driver.current_url:
             if "NOME" in command:
                 search_box = driver.find_element("xpath", '/html/body/div[1]/div[2]/div/div/main/div/article/div/form/label[1]/input')
@@ -416,16 +417,25 @@ while True:
                     message_box.send_keys(input_message)
             if "ENVIAR" in command:
                 botao_avanca = driver.find_element("xpath", '/html/body/div[1]/div[2]/div/div/main/div/article/div/form/button')
+                time.sleep(0.5)
                 driver.execute_script("arguments[0].scrollIntoView()", botao_avanca)
-                time.sleep(2)
+                time.sleep(0.5)
                 #print("funcionoooou")
                 #time.sleep(0.2)
                 #driver.implicitly_wait(0.2)
                 botao_avanca.click()
-                time.sleep(2)
+                try:
+                    WebDriverWait(driver, 10).until(EC.alert_is_present())
+                    alert = driver.switch_to.alert
+                    #print(f"Alert text: {alert.text}")
+                    alert.accept()  # Aceita o alerta
+                except NoAlertPresentException:
+                    pass
+                    #print("No alert present")
+                time.sleep(0.5)
                 #thread = threading.Timer(0.2, delayed_click, [botao_avanca])
                 #thread.start()
-        '''
+
         if "https://docs.google.com/forms/d/e/1FAIpQLSc1JetQtx0i1VsrSdUNAl_wo319_bnxZOW7nJxMNWM49rryjw/viewform" in driver.current_url:
             match command:
                 case cmd if "PRONTUÁRIO" in cmd:
@@ -719,7 +729,7 @@ while True:
                         except:
                             pass
                         break
-        '''
+
         if "SAIR" in command:
             driver.quit()
         if "ENCERRAR" in command:
